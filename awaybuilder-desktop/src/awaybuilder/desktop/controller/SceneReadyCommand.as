@@ -1,7 +1,5 @@
 package awaybuilder.desktop.controller
 {
-	import awaybuilder.controller.events.SceneReadyEvent;
-	
 	import flash.events.Event;
 	import flash.system.Capabilities;
 	import flash.utils.setInterval;
@@ -10,6 +8,8 @@ package awaybuilder.desktop.controller
 	import mx.controls.Alert;
 	import mx.core.FlexGlobals;
 	import mx.events.ResizeEvent;
+	
+	import awaybuilder.controller.events.SceneReadyEvent;
 	
 	import org.robotlegs.mvcs.Command;
 
@@ -24,6 +24,14 @@ package awaybuilder.desktop.controller
 		
 		override public function execute():void
 		{
+			// for in-Moonshine use
+			if (!(FlexGlobals.topLevelApplication is AwayBuilderApplication))
+			{
+				var tmpSplashScreen:SplashScreenLib = SplashScreenLib.getInstance();
+				tmpSplashScreen.setAlpha(0);
+				return;
+			}
+			
 			_app = FlexGlobals.topLevelApplication as AwayBuilderApplication;
 			_app.addEventListener(Event.ENTER_FRAME, enterFrameHandler );
 			_app.alwaysInFront = true;

@@ -10,7 +10,6 @@ package awaybuilder.desktop
     import awaybuilder.desktop.controller.DocumentRequestCommand;
     import awaybuilder.desktop.controller.OpenFromInvokeCommand;
     import awaybuilder.desktop.controller.SceneReadyCommand;
-    import awaybuilder.desktop.controller.ShowDocumentLoadProgressWindowCommand;
     import awaybuilder.desktop.controller.ShowMessageBoxCommand;
     import awaybuilder.desktop.controller.events.OpenFromInvokeEvent;
     import awaybuilder.desktop.model.DesktopDocumentService;

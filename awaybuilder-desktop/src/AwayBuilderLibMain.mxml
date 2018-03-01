@@ -86,15 +86,11 @@
 		
 		import mx.events.FlexEvent;
 		
-		public var splashScreen:SplashScreen;
-		
 		public var isMac:Boolean;
 		
 		private function preinitializeHandler(event:FlexEvent):void
 		{
-			splashScreen = new SplashScreen();
-			
-			isMac = (Capabilities.os.indexOf("Mac OS") >= 0); 
+			isMac = (Capabilities.os.indexOf("Mac OS") >= 0);
 		}
 		
 		private function keyEquivalentModifiers(item:Object):Array 

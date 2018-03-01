@@ -1,8 +1,7 @@
 package
 {
-	import awaybuilder.AwayBuilder;
-	
 	import flash.display.Bitmap;
+	import flash.display.DisplayObject;
 	import flash.display.NativeWindow;
 	import flash.display.NativeWindowInitOptions;
 	import flash.display.NativeWindowSystemChrome;
@@ -10,22 +9,34 @@ package
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.system.Capabilities;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	
 	import mx.core.BitmapAsset;
-	import mx.core.SpriteAsset;
-	import mx.logging.Log;
 	
-	public class SplashScreen extends NativeWindow
+	import spark.components.VGroup;
+	
+	import awaybuilder.AwayBuilder;
+	
+	public class SplashScreenLib extends NativeWindow
 	{
 		[Embed("/assets/Logo_AwayBuilder_240.png")]
 		private const Logo:Class;
 		
+		private static var instance:SplashScreenLib;
+		
+		public static function getInstance():SplashScreenLib 
+		{	
+			if (!instance) instance = new SplashScreenLib();
+			return instance;
+		}
+		
 		private var _image:Sprite;
 		
-		public function SplashScreen()
+		public function SplashScreenLib()
 		{
 			var initOptions:NativeWindowInitOptions = new NativeWindowInitOptions();
 			initOptions.resizable = false;
@@ -36,15 +47,19 @@ package
 			initOptions.type = NativeWindowType.LIGHTWEIGHT;
 			
 			super(initOptions);
-			
+		}
+		
+		public function attachSplashScreenTo(value:Rectangle):void
+		{
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
 			this.stage.align = StageAlign.TOP_LEFT;
-//			this.alwaysInFront = true;
-			this.activate();
+			this.alwaysInFront = true;
+			
 			this.width = 480;
 			this.height = 310;
-			/*this.x = (Capabilities.screenResolutionX-this.width)/2;
-			this.y = (Capabilities.screenResolutionY-this.height)/2;*/
+			this.activate();
+			this.x = ((value.width-this.width)/2) + value.x;
+			this.y = ((value.height-this.height)/2) + value.y;
 			
 			_image = new Sprite();
 			this.stage.addChild( _image );
@@ -78,7 +93,6 @@ package
 		
 		public function setAlpha( value:Number ):void
 		{
-			trace(value);
 			_image.alpha = value;
 		}
 		
