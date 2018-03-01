@@ -53,7 +53,7 @@ package
 		{
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
 			this.stage.align = StageAlign.TOP_LEFT;
-			this.alwaysInFront = true;
+			//this.alwaysInFront = true;
 			
 			this.width = 480;
 			this.height = 310;
