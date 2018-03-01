@@ -1,5 +1,10 @@
 package awaybuilder.desktop
 {
+    import flash.desktop.NativeApplication;
+    import flash.display.DisplayObjectContainer;
+    
+    import mx.core.FlexGlobals;
+    
     import awaybuilder.CoreContext;
     import awaybuilder.controller.events.DocumentEvent;
     import awaybuilder.controller.events.DocumentRequestEvent;
@@ -18,11 +23,6 @@ package awaybuilder.desktop
     import awaybuilder.desktop.view.mediators.EditedDocumentWarningWindowMediator;
     import awaybuilder.model.IDocumentService;
     import awaybuilder.view.components.popup.AboutPopup;
-    
-    import flash.desktop.NativeApplication;
-    import flash.display.DisplayObjectContainer;
-    
-    import mx.core.FlexGlobals;
     
     import org.robotlegs.base.ContextEvent;
     import org.robotlegs.base.MultiWindowFlexMediatorMap;
@@ -55,7 +55,8 @@ package awaybuilder.desktop
 			
 			this.injector.mapSingletonOf(IDocumentService, DesktopDocumentService);
 			
-			this.mediatorMap.mapView(AwayBuilderApplication, ApplicationMediator);
+			//this.mediatorMap.mapView(AwayBuilderApplication, ApplicationMediator);
+			this.mediatorMap.mapView(AwayBuilderLibMain, ApplicationMediator);
 			this.mediatorMap.mapView(EditedDocumentWarningWindow, EditedDocumentWarningWindowMediator);
 			
 			this.mediatorMap.createMediator(FlexGlobals.topLevelApplication);

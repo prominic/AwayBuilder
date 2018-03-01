@@ -1,23 +1,6 @@
 package awaybuilder.desktop.view.mediators
 {
 
-	import awaybuilder.controller.clipboard.events.ClipboardEvent;
-	import awaybuilder.controller.events.DocumentEvent;
-	import awaybuilder.controller.events.DocumentModelEvent;
-	import awaybuilder.controller.events.DocumentRequestEvent;
-	import awaybuilder.controller.events.ErrorLogEvent;
-	import awaybuilder.controller.events.TextureSizeErrorsEvent;
-	import awaybuilder.controller.history.UndoRedoEvent;
-	import awaybuilder.controller.scene.events.SceneEvent;
-	import awaybuilder.desktop.controller.events.OpenFromInvokeEvent;
-	import awaybuilder.desktop.utils.ModalityManager;
-	import awaybuilder.model.DocumentModel;
-	import awaybuilder.model.UndoRedoModel;
-	import awaybuilder.model.vo.scene.AssetVO;
-	import awaybuilder.model.vo.scene.ObjectVO;
-	import awaybuilder.utils.enumerators.EMenuItem;
-	import awaybuilder.view.mediators.BaseApplicationMediator;
-	
 	import flash.display.NativeMenuItem;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
@@ -28,18 +11,40 @@ package awaybuilder.desktop.view.mediators
 	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
 	
+	import mx.controls.menuClasses.MenuBarItem;
 	import mx.core.DragSource;
 	import mx.core.IIMESupport;
 	import mx.events.DragEvent;
 	import mx.events.FlexNativeMenuEvent;
+	import mx.events.MenuEvent;
 	import mx.managers.DragManager;
 	import mx.managers.IFocusManagerComponent;
+	
+	import awaybuilder.controller.clipboard.events.ClipboardEvent;
+	import awaybuilder.controller.events.DocumentEvent;
+	import awaybuilder.controller.events.DocumentModelEvent;
+	import awaybuilder.controller.events.DocumentRequestEvent;
+	import awaybuilder.controller.events.ErrorLogEvent;
+	import awaybuilder.controller.events.TextureSizeErrorsEvent;
+	import awaybuilder.controller.history.UndoRedoEvent;
+	import awaybuilder.controller.scene.events.SceneEvent;
+	import awaybuilder.desktop.controller.events.OpenFromInvokeEvent;
+	import awaybuilder.desktop.model.AwayBuilderConstants;
+	import awaybuilder.desktop.utils.ModalityManager;
+	import awaybuilder.model.DocumentModel;
+	import awaybuilder.model.UndoRedoModel;
+	import awaybuilder.model.vo.scene.AssetVO;
+	import awaybuilder.model.vo.scene.ObjectVO;
+	import awaybuilder.utils.enumerators.EMenuItem;
+	import awaybuilder.view.mediators.BaseApplicationMediator;
 
 	public class ApplicationMediator extends BaseApplicationMediator
 	{
-		
 		[Inject]
 		public var app:AwayBuilderApplication;
+		
+		[Inject]
+		public var appLib:AwayBuilderLibMain;
 		
 		[Inject]
 		public var documentModel:DocumentModel;
@@ -48,7 +53,8 @@ package awaybuilder.desktop.view.mediators
 		public var undoRedoModel:UndoRedoModel;
 		
 		private var _isWin:Boolean; 
-		private var _isMac:Boolean; 
+		private var _isMac:Boolean;
+		private var _isLibrary:Boolean = AwayBuilderConstants.IS_LIBRARY;
 		
 		private var _menuCache:Dictionary;
 		
@@ -56,8 +62,15 @@ package awaybuilder.desktop.view.mediators
 		{	
 			_menuCache = new Dictionary();
 			
-			app.menu.addEventListener(FlexNativeMenuEvent.ITEM_CLICK, menu_itemClickHandler );
-			this.updatePageTitle();
+			if (!_isLibrary)
+			{
+				app.menu.addEventListener(FlexNativeMenuEvent.ITEM_CLICK, menu_itemClickHandler );
+				this.updatePageTitle();
+			}
+			else
+			{
+				appLib.menu.addEventListener(MenuEvent.ITEM_CLICK, menuLib_itemClickHandler );
+			}
 			
 			addContextListener( DocumentModelEvent.DOCUMENT_NAME_CHANGED, eventDispatcher_documentNameChangedHandler);
 			addContextListener( DocumentModelEvent.DOCUMENT_EDITED, eventDispatcher_documentEditedHandler);
@@ -85,8 +98,8 @@ package awaybuilder.desktop.view.mediators
 			app.stage.addEventListener(FocusEvent.FOCUS_IN, focusInHandler );
 			
 			//fix for linux window size bug
-			this.app.nativeWindow.height++;
-			this.app.nativeWindow.height--;
+			/*this.app.nativeWindow.height++;
+			this.app.nativeWindow.height--;*/
 			
 			getItemByValue( EMenuItem.UNDO ).enabled = undoRedoModel.canUndo;
 			getItemByValue( EMenuItem.REDO ).enabled = undoRedoModel.canRedo;
@@ -99,7 +112,7 @@ package awaybuilder.desktop.view.mediators
 			_isWin = (Capabilities.os.indexOf("Windows") >= 0); 
 			_isMac = (Capabilities.os.indexOf("Mac OS") >= 0); 
 			
-			if( _isMac )
+			if( _isMac && !_isLibrary)
 			{
 				getItemByValue( EMenuItem.EXIT ).keyEquivalent = "q";
 				getItemByValue( EMenuItem.EXIT ).keyEquivalentModifiers = [Keyboard.COMMAND];
@@ -123,21 +136,34 @@ package awaybuilder.desktop.view.mediators
 			}
 		}
 		
-		private function getItemByValue( value:String ):NativeMenuItem
+		private function getItemByValue( value:String ):Object
 		{
 			if( _menuCache[value] ) return _menuCache[value];
-			_menuCache[value] = findItem( value, app.menu.nativeMenu.items );
+			_menuCache[value] = findItem( value, _isLibrary ? appLib.menu.menuBarItems : app.menu.nativeMenu.items );
 			return _menuCache[value];
 		}
-		private function findItem( value:String, items:Array ):NativeMenuItem
+		private function findItem( value:String, items:Array ):Object
 		{
-			for each( var item:NativeMenuItem in items )
+			for each( var item:Object in items )
 			{
-				if( item.data && item.data.value == value ) return item;
-				if( item.submenu )
+				var menuItem:Object;
+				if (_isLibrary)
 				{
-					var nativeMenuItem:NativeMenuItem = findItem( value, item.submenu.items );
-					if( nativeMenuItem ) return nativeMenuItem;
+					if( item.data && item.data.label == value ) return item;
+					if( item.menuBar.menuBarItems )
+					{
+						menuItem = findItem( value, item.menuBar.menuBarItems );
+						if( menuItem ) return menuItem;
+					}
+				}
+				else
+				{
+					if( item.data && item.data.value == value ) return item;
+					if( item.submenu )
+					{
+						menuItem = findItem( value, item.submenu.items );
+						if( menuItem ) return menuItem;
+					}
 				}
 			}
 			return null;
@@ -218,18 +244,21 @@ package awaybuilder.desktop.view.mediators
 		
 		private function eventDispatcher_switchToFreeCameraHandler(event:SceneEvent):void
 		{
+			if (_isLibrary) return;
 			getItemByValue( EMenuItem.TARGET_CAMERA ).checked = false;
 			getItemByValue( EMenuItem.FREE_CAMERA ).checked = true;
 		}
 		
 		private function eventDispatcher_switchToTargetCameraHandler(event:SceneEvent):void
 		{
+			if (_isLibrary) return;
 			getItemByValue( EMenuItem.TARGET_CAMERA ).checked = false;
 			getItemByValue( EMenuItem.FREE_CAMERA ).checked = true;
 		}
 		
 		private function eventDispatcher_switchTranslateHandler(event:SceneEvent):void
 		{
+			if (_isLibrary) return;
 			getItemByValue( EMenuItem.TRANSLATE_MODE ).checked = true;
 			getItemByValue( EMenuItem.ROTATE_MODE ).checked = false;
 			getItemByValue( EMenuItem.SCALE_MODE ).checked = false;
@@ -237,6 +266,7 @@ package awaybuilder.desktop.view.mediators
 		
 		private function eventDispatcher_switchRotateHandler(event:SceneEvent):void
 		{
+			if (_isLibrary) return;
 			getItemByValue( EMenuItem.TRANSLATE_MODE ).checked = false;
 			getItemByValue( EMenuItem.ROTATE_MODE ).checked = true;
 			getItemByValue( EMenuItem.SCALE_MODE ).checked = false;
@@ -244,6 +274,7 @@ package awaybuilder.desktop.view.mediators
 		
 		private function eventDispatcher_switchScaleCameraHandler(event:SceneEvent):void
 		{
+			if (_isLibrary) return;
 			getItemByValue( EMenuItem.TRANSLATE_MODE ).checked = false;
 			getItemByValue( EMenuItem.ROTATE_MODE ).checked = false;
 			getItemByValue( EMenuItem.SCALE_MODE ).checked = true;
@@ -292,6 +323,11 @@ package awaybuilder.desktop.view.mediators
 		}
 		
 		private function menu_itemClickHandler(event:FlexNativeMenuEvent):void
+		{	
+			onItemSelect( event.item.value );
+		}
+		
+		private function menuLib_itemClickHandler(event:MenuEvent):void
 		{	
 			onItemSelect( event.item.value );
 		}
