@@ -12,6 +12,7 @@ package awaybuilder.desktop.view.mediators
 	
 	import mx.core.DragSource;
 	import mx.core.IIMESupport;
+	import mx.core.UIComponent;
 	import mx.events.DragEvent;
 	import mx.events.FlexNativeMenuEvent;
 	import mx.events.MenuEvent;
@@ -35,10 +36,10 @@ package awaybuilder.desktop.view.mediators
 	import awaybuilder.utils.enumerators.EMenuItem;
 	import awaybuilder.view.mediators.BaseApplicationMediator;
 
-	public class ApplicationMediator extends BaseApplicationMediator
+	public class LibraryApplicationMediator extends BaseApplicationMediator
 	{
 		[Inject]
-		public var app:AwayBuilderApplication;
+		public var app:AwayBuilderLibMain;
 		
 		[Inject]
 		public var documentModel:DocumentModel;
@@ -55,8 +56,9 @@ package awaybuilder.desktop.view.mediators
 		{	
 			_menuCache = new Dictionary();
 			
-			app.menu.addEventListener(FlexNativeMenuEvent.ITEM_CLICK, menu_itemClickHandler );
-			this.updatePageTitle();
+			app.menu.addEventListener(MenuEvent.ITEM_CLICK, menuLib_itemClickHandler );
+			app.menu.addEventListener(MenuEvent.MENU_SHOW, onMenuOpenEvent);
+			app.menu.addEventListener(MenuEvent.CHANGE, onMenuChanged);
 			
 			addContextListener( DocumentModelEvent.DOCUMENT_NAME_CHANGED, eventDispatcher_documentNameChangedHandler);
 			addContextListener( DocumentModelEvent.DOCUMENT_EDITED, eventDispatcher_documentEditedHandler);
@@ -80,28 +82,39 @@ package awaybuilder.desktop.view.mediators
 			addViewListener( InvokeEvent.INVOKE, invokeHandler );
 			
 			this.eventMap.mapListener(app.stage, KeyboardEvent.KEY_DOWN, stage_keyDownHandler);
-			app.stage.addEventListener(FocusEvent.FOCUS_IN, focusInHandler );
+			//app.stage.addEventListener(FocusEvent.FOCUS_IN, focusInHandler );
 			
 			//fix for linux window size bug
 			/*this.app.nativeWindow.height++;
 			this.app.nativeWindow.height--;*/
 			
-			getItemByValue( EMenuItem.UNDO ).enabled = undoRedoModel.canUndo;
+			/*getItemByValue( EMenuItem.UNDO ).enabled = undoRedoModel.canUndo;
 			getItemByValue( EMenuItem.REDO ).enabled = undoRedoModel.canRedo;
 			getItemByValue( EMenuItem.FOCUS ).enabled = false;
 			getItemByValue( EMenuItem.DELETE ).enabled = false;
 			getItemByValue( EMenuItem.CUT ).enabled = false;
 			getItemByValue( EMenuItem.COPY ).enabled = false;
-			getItemByValue( EMenuItem.PASTE ).enabled = false;
+			getItemByValue( EMenuItem.PASTE ).enabled = false;*/
 			
 			_isWin = (Capabilities.os.indexOf("Windows") >= 0); 
 			_isMac = (Capabilities.os.indexOf("Mac OS") >= 0); 
 			
-			if( _isMac)
+			if( _isMac && !CONFIG::MOONSHINE)
 			{
 				getItemByValue( EMenuItem.EXIT ).keyEquivalent = "q";
 				getItemByValue( EMenuItem.EXIT ).keyEquivalentModifiers = [Keyboard.COMMAND];
 			}
+		}
+		
+		private function onMenuOpenEvent(event:MenuEvent):void
+		{
+			trace("gandu");
+			
+		}
+		
+		private function onMenuChanged(event:MenuEvent):void
+		{
+			
 		}
 
 		private function focusInHandler(event:FocusEvent):void
@@ -124,7 +137,7 @@ package awaybuilder.desktop.view.mediators
 		private function getItemByValue( value:String ):Object
 		{
 			if( _menuCache[value] ) return _menuCache[value];
-			_menuCache[value] = findItem( value, app.menu.nativeMenu.items );
+			_menuCache[value] = findItem( value, app.menu.menuBarItems );
 			return _menuCache[value];
 		}
 		private function findItem( value:String, items:Array ):Object
@@ -133,9 +146,9 @@ package awaybuilder.desktop.view.mediators
 			{
 				var menuItem:Object;
 				if( item.data && item.data.value == value ) return item;
-				if( item.submenu )
+				if( item.menuBar.menuBarItems )
 				{
-					menuItem = findItem( value, item.submenu.items );
+					menuItem = findItem( value, item.menuBar.menuBarItems );
 					if( menuItem ) return menuItem;
 				}
 			}
@@ -172,7 +185,7 @@ package awaybuilder.desktop.view.mediators
 			{
 				newTitle += " *";
 			}
-			app.title = newTitle;
+			//app.title = newTitle;
 		}
 		
 		private function eventDispatcher_documentEditedHandler(event:DocumentModelEvent):void
@@ -272,7 +285,7 @@ package awaybuilder.desktop.view.mediators
 					{
 						if(file.exists && extensions.indexOf(file.extension.toLowerCase()) >= 0)
 						{
-							DragManager.acceptDragDrop(this.app);
+							DragManager.acceptDragDrop(this.app as UIComponent);
 							break;
 						}
 					}
@@ -321,7 +334,7 @@ package awaybuilder.desktop.view.mediators
 		}
 		override protected function exit():void
 		{
-			app.close();
+			//app.close();
 		}
 	}
 }

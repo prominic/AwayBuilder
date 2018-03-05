@@ -18,14 +18,14 @@ package
 	import mx.core.SpriteAsset;
 	import mx.logging.Log;
 	
-	public class SplashScreen extends NativeWindow
+	public class SplashScreenAB extends NativeWindow
 	{
 		[Embed("/assets/Logo_AwayBuilder_240.png")]
 		private const Logo:Class;
 		
 		private var _image:Sprite;
 		
-		public function SplashScreen()
+		public function SplashScreenAB()
 		{
 			var initOptions:NativeWindowInitOptions = new NativeWindowInitOptions();
 			initOptions.resizable = false;

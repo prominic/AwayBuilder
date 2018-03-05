@@ -21,6 +21,7 @@ package awaybuilder.desktop
     import awaybuilder.desktop.view.components.EditedDocumentWarningWindow;
     import awaybuilder.desktop.view.mediators.ApplicationMediator;
     import awaybuilder.desktop.view.mediators.EditedDocumentWarningWindowMediator;
+    import awaybuilder.desktop.view.mediators.LibraryApplicationMediator;
     import awaybuilder.model.IDocumentService;
     import awaybuilder.view.components.popup.AboutPopup;
     
@@ -55,8 +56,15 @@ package awaybuilder.desktop
 			
 			this.injector.mapSingletonOf(IDocumentService, DesktopDocumentService);
 			
-			//this.mediatorMap.mapView(AwayBuilderApplication, ApplicationMediator);
-			this.mediatorMap.mapView(AwayBuilderLibMain, ApplicationMediator);
+			if (CONFIG::MOONSHINE)
+			{
+				this.mediatorMap.mapView(AwayBuilderLibMain, LibraryApplicationMediator);
+			}
+			else
+			{
+				this.mediatorMap.mapView(AwayBuilderApplication, ApplicationMediator);
+			}
+			
 			this.mediatorMap.mapView(EditedDocumentWarningWindow, EditedDocumentWarningWindowMediator);
 			
 			this.mediatorMap.createMediator(FlexGlobals.topLevelApplication);

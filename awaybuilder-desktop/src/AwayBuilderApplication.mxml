@@ -8,8 +8,7 @@
 						minWidth="1024" minHeight="720" 
 						backgroundColor="0x333333"
 						showStatusBar="false" usePreloader="false"
-						preinitialize="preinitializeHandler(event)" xmlns:desktop="awaybuilder.desktop.*"
-						>
+						preinitialize="preinitializeHandler(event)" xmlns:desktop="awaybuilder.desktop.*">
 	<s:menu>
 		<mx:FlexNativeMenu dataProvider="{menuProvider}" keyEquivalentModifiersFunction="keyEquivalentModifiers"/>
 	</s:menu>
@@ -101,13 +100,13 @@
 		
 		private var _updateCancelled:Boolean = false;
 		
-		public var splashScreen:SplashScreen;
+		public var splashScreen:SplashScreenAB;
 		
 		public var isMac:Boolean;
 		
         private function preinitializeHandler(event:FlexEvent):void
         {
-			splashScreen = new SplashScreen();
+			splashScreen = new SplashScreenAB();
 			
 			isMac = (Capabilities.os.indexOf("Mac OS") >= 0); 
 			

@@ -25,7 +25,7 @@ package awaybuilder.desktop.controller
 		override public function execute():void
 		{
 			// for in-Moonshine use
-			if (!(FlexGlobals.topLevelApplication is AwayBuilderApplication))
+			if (CONFIG::MOONSHINE)
 			{
 				var tmpSplashScreen:SplashScreenLib = SplashScreenLib.getInstance();
 				tmpSplashScreen.setAlpha(0);
