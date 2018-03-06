@@ -86,6 +86,7 @@
 		
 		public var isMac:Boolean;
 		public var menu:Object;
+		public var eventDispatcher:*;
 		
 		private function preinitializeHandler(event:FlexEvent):void
 		{

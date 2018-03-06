@@ -61,6 +61,7 @@ package awaybuilder.desktop.view.mediators
 			app.attachMenu();
 
 			app.menu.addEventListener(MenuEvent.ITEM_CLICK, menuLib_itemClickHandler );
+			app.eventDispatcher.addEventListener("awayBuilderMenuEvent", onMenuLib_itemClickHandler, false, 0, true);
 			
 			addContextListener( DocumentModelEvent.DOCUMENT_NAME_CHANGED, eventDispatcher_documentNameChangedHandler);
 			addContextListener( DocumentModelEvent.DOCUMENT_EDITED, eventDispatcher_documentEditedHandler);
@@ -221,21 +222,18 @@ package awaybuilder.desktop.view.mediators
 		
 		private function eventDispatcher_switchToFreeCameraHandler(event:SceneEvent):void
 		{
-			if (CONFIG::MOONSHINE) return;
 			getItemByValue( EMenuItem.TARGET_CAMERA ).checked = false;
 			getItemByValue( EMenuItem.FREE_CAMERA ).checked = true;
 		}
 		
 		private function eventDispatcher_switchToTargetCameraHandler(event:SceneEvent):void
 		{
-			if (CONFIG::MOONSHINE) return;
 			getItemByValue( EMenuItem.TARGET_CAMERA ).checked = false;
 			getItemByValue( EMenuItem.FREE_CAMERA ).checked = true;
 		}
 		
 		private function eventDispatcher_switchTranslateHandler(event:SceneEvent):void
 		{
-			if (CONFIG::MOONSHINE) return;
 			getItemByValue( EMenuItem.TRANSLATE_MODE ).checked = true;
 			getItemByValue( EMenuItem.ROTATE_MODE ).checked = false;
 			getItemByValue( EMenuItem.SCALE_MODE ).checked = false;
@@ -243,7 +241,6 @@ package awaybuilder.desktop.view.mediators
 		
 		private function eventDispatcher_switchRotateHandler(event:SceneEvent):void
 		{
-			if (CONFIG::MOONSHINE) return;
 			getItemByValue( EMenuItem.TRANSLATE_MODE ).checked = false;
 			getItemByValue( EMenuItem.ROTATE_MODE ).checked = true;
 			getItemByValue( EMenuItem.SCALE_MODE ).checked = false;
@@ -251,7 +248,6 @@ package awaybuilder.desktop.view.mediators
 		
 		private function eventDispatcher_switchScaleCameraHandler(event:SceneEvent):void
 		{
-			if (CONFIG::MOONSHINE) return;
 			getItemByValue( EMenuItem.TRANSLATE_MODE ).checked = false;
 			getItemByValue( EMenuItem.ROTATE_MODE ).checked = false;
 			getItemByValue( EMenuItem.SCALE_MODE ).checked = true;
@@ -307,6 +303,11 @@ package awaybuilder.desktop.view.mediators
 		private function menuLib_itemClickHandler(event:MenuEvent):void
 		{	
 			onItemSelect( event.item.value );
+		}
+		
+		private function onMenuLib_itemClickHandler(event:*):void
+		{
+			onItemSelect(event.data.label);
 		}
 		
 		private function stage_keyDownHandler(event:KeyboardEvent):void
