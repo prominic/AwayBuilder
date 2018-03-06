@@ -75,18 +75,17 @@
 		
 	</fx:Declarations>
 	
-	<mx:MenuBar id="menu" 
-				labelField="label" dataProvider="{menuProvider}"
-				width="100%"/>
 	<components:CoreEditor id="coreEditor" width="100%" height="100%"/>
 	
 	<fx:Script><![CDATA[
 		import awaybuilder.AwayBuilder;
 		import awaybuilder.utils.enumerators.EMenuItem;
+		import mx.core.IVisualElement;
 		
 		import mx.events.FlexEvent;
 		
 		public var isMac:Boolean;
+		public var menu:Object;
 		
 		private function preinitializeHandler(event:FlexEvent):void
 		{
@@ -112,6 +111,11 @@
 			if( isMac )
 				return Keyboard.COMMAND;
 			return Keyboard.CONTROL;
+		}
+		
+		public function attachMenu():void
+		{
+			if (menu) this.addElementAt(menu as IVisualElement, 0);
 		}
 		
 	]]></fx:Script>

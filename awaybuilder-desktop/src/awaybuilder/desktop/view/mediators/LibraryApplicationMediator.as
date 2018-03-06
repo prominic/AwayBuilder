@@ -56,9 +56,11 @@ package awaybuilder.desktop.view.mediators
 		{	
 			_menuCache = new Dictionary();
 			
+			// attach custom menu system generated 
+			// by Moonshine
+			app.attachMenu();
+
 			app.menu.addEventListener(MenuEvent.ITEM_CLICK, menuLib_itemClickHandler );
-			app.menu.addEventListener(MenuEvent.MENU_SHOW, onMenuOpenEvent);
-			app.menu.addEventListener(MenuEvent.CHANGE, onMenuChanged);
 			
 			addContextListener( DocumentModelEvent.DOCUMENT_NAME_CHANGED, eventDispatcher_documentNameChangedHandler);
 			addContextListener( DocumentModelEvent.DOCUMENT_EDITED, eventDispatcher_documentEditedHandler);
@@ -88,13 +90,13 @@ package awaybuilder.desktop.view.mediators
 			/*this.app.nativeWindow.height++;
 			this.app.nativeWindow.height--;*/
 			
-			/*getItemByValue( EMenuItem.UNDO ).enabled = undoRedoModel.canUndo;
+			getItemByValue( EMenuItem.UNDO ).enabled = undoRedoModel.canUndo;
 			getItemByValue( EMenuItem.REDO ).enabled = undoRedoModel.canRedo;
 			getItemByValue( EMenuItem.FOCUS ).enabled = false;
 			getItemByValue( EMenuItem.DELETE ).enabled = false;
 			getItemByValue( EMenuItem.CUT ).enabled = false;
 			getItemByValue( EMenuItem.COPY ).enabled = false;
-			getItemByValue( EMenuItem.PASTE ).enabled = false;*/
+			getItemByValue( EMenuItem.PASTE ).enabled = false;
 			
 			_isWin = (Capabilities.os.indexOf("Windows") >= 0); 
 			_isMac = (Capabilities.os.indexOf("Mac OS") >= 0); 
@@ -104,17 +106,6 @@ package awaybuilder.desktop.view.mediators
 				getItemByValue( EMenuItem.EXIT ).keyEquivalent = "q";
 				getItemByValue( EMenuItem.EXIT ).keyEquivalentModifiers = [Keyboard.COMMAND];
 			}
-		}
-		
-		private function onMenuOpenEvent(event:MenuEvent):void
-		{
-			trace("gandu");
-			
-		}
-		
-		private function onMenuChanged(event:MenuEvent):void
-		{
-			
 		}
 
 		private function focusInHandler(event:FocusEvent):void
@@ -137,18 +128,18 @@ package awaybuilder.desktop.view.mediators
 		private function getItemByValue( value:String ):Object
 		{
 			if( _menuCache[value] ) return _menuCache[value];
-			_menuCache[value] = findItem( value, app.menu.menuBarItems );
+			_menuCache[value] = findItem( value, app.menu.menu.items );
 			return _menuCache[value];
 		}
-		private function findItem( value:String, items:Array ):Object
+		private function findItem( value:String, items:* ):Object
 		{
 			for each( var item:Object in items )
 			{
 				var menuItem:Object;
-				if( item.data && item.data.value == value ) return item;
-				if( item.menuBar.menuBarItems )
+				if( item.label == value ) return item;
+				if( item.submenu && item.submenu.items.length > 0 )
 				{
-					menuItem = findItem( value, item.menuBar.menuBarItems );
+					menuItem = findItem( value, item.submenu.items );
 					if( menuItem ) return menuItem;
 				}
 			}
