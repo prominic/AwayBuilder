@@ -56,11 +56,13 @@ package awaybuilder.desktop.view.mediators
 		{	
 			_menuCache = new Dictionary();
 			
+			app.addEventListener(AwayBuilderLibMain.DISPOSE, dispose);
+			
 			// attach custom menu system generated 
 			// by Moonshine
 			app.attachMenu();
 
-			app.menu.addEventListener(MenuEvent.ITEM_CLICK, menuLib_itemClickHandler );
+			app.menu.addEventListener(MenuEvent.ITEM_CLICK, menuLib_itemClickHandler, false, 0, true);
 			app.eventDispatcher.addEventListener("awayBuilderMenuEvent", onMenuLib_itemClickHandler, false, 0, true);
 			
 			addContextListener( DocumentModelEvent.DOCUMENT_NAME_CHANGED, eventDispatcher_documentNameChangedHandler);
@@ -327,6 +329,32 @@ package awaybuilder.desktop.view.mediators
 		override protected function exit():void
 		{
 			//app.close();
+		}
+		
+		private function dispose(event:Event):void
+		{
+			app.removeEventListener(AwayBuilderLibMain.DISPOSE, dispose);
+			app.menu.removeEventListener(MenuEvent.ITEM_CLICK, menuLib_itemClickHandler);
+			app.eventDispatcher.removeEventListener("awayBuilderMenuEvent", onMenuLib_itemClickHandler);
+			
+			removeContextListener( DocumentModelEvent.DOCUMENT_NAME_CHANGED, eventDispatcher_documentNameChangedHandler);
+			removeContextListener( DocumentModelEvent.DOCUMENT_EDITED, eventDispatcher_documentEditedHandler);
+			removeContextListener( SceneEvent.SELECT, context_itemSelectHandler);
+			removeContextListener( SceneEvent.SWITCH_CAMERA_TO_FREE, eventDispatcher_switchToFreeCameraHandler);
+			removeContextListener( SceneEvent.SWITCH_CAMERA_TO_TARGET, eventDispatcher_switchToTargetCameraHandler);
+			removeContextListener( SceneEvent.SWITCH_TRANSFORM_TRANSLATE, eventDispatcher_switchTranslateHandler);
+			removeContextListener( SceneEvent.SWITCH_TRANSFORM_ROTATE, eventDispatcher_switchRotateHandler);
+			removeContextListener( SceneEvent.SWITCH_TRANSFORM_SCALE, eventDispatcher_switchScaleCameraHandler);
+			removeContextListener( ClipboardEvent.CLIPBOARD_COPY, context_copyHandler);
+			removeContextListener( UndoRedoEvent.UNDO_LIST_CHANGE, context_undoListChangeHandler);
+			removeContextListener( ErrorLogEvent.LOG_ENTRY_MADE, eventDispatcher_errorLogHandler);
+			
+			removeViewListener( Event.CLOSING, awaybuilder_closingHandler );
+			removeViewListener( DragEvent.DRAG_ENTER, awaybuilder_dragEnterHandler );
+			removeViewListener( DragEvent.DRAG_DROP, awaybuilder_dragDropHandler );
+			removeViewListener( InvokeEvent.INVOKE, invokeHandler );
+			
+			this.eventMap.unmapListeners();
 		}
 	}
 }

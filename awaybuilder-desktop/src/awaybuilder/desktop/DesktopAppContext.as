@@ -1,16 +1,12 @@
 package awaybuilder.desktop
 {
-    import flash.desktop.NativeApplication;
-    import flash.display.DisplayObjectContainer;
-    
-    import mx.core.FlexGlobals;
+    import flash.events.Event;
     
     import awaybuilder.CoreContext;
     import awaybuilder.controller.events.DocumentEvent;
     import awaybuilder.controller.events.DocumentRequestEvent;
     import awaybuilder.controller.events.MessageBoxEvent;
     import awaybuilder.controller.events.SceneReadyEvent;
-    import awaybuilder.controller.events.SettingsEvent;
     import awaybuilder.desktop.controller.CloseDocumentCommand;
     import awaybuilder.desktop.controller.DocumentRequestCommand;
     import awaybuilder.desktop.controller.OpenFromInvokeCommand;
@@ -23,7 +19,6 @@ package awaybuilder.desktop
     import awaybuilder.desktop.view.mediators.EditedDocumentWarningWindowMediator;
     import awaybuilder.desktop.view.mediators.LibraryApplicationMediator;
     import awaybuilder.model.IDocumentService;
-    import awaybuilder.view.components.popup.AboutPopup;
     
     import org.robotlegs.base.ContextEvent;
     import org.robotlegs.base.MultiWindowFlexMediatorMap;
@@ -40,6 +35,11 @@ package awaybuilder.desktop
 		override public function startup():void
 		{
 			super.startup();
+			
+			if (CONFIG::MOONSHINE)
+			{
+				this.contextView.addEventListener(AwayBuilderLibMain.DISPOSE, dispose);
+			}
 			
 			this.commandMap.mapEvent(SceneReadyEvent.READY, SceneReadyCommand);
 			
@@ -67,9 +67,17 @@ package awaybuilder.desktop
 			
 			this.mediatorMap.mapView(EditedDocumentWarningWindow, EditedDocumentWarningWindowMediator);
 			
-			this.mediatorMap.createMediator(FlexGlobals.topLevelApplication);
+			this.mediatorMap.createMediator(this.contextView);
 			
 			this.dispatchEvent(new ContextEvent(ContextEvent.STARTUP));
+		}
+		
+		private function dispose(event:Event):void
+		{
+			this.contextView.removeEventListener(AwayBuilderLibMain.DISPOSE, dispose);
+			this.commandMap.unmapEvents();
+			this.mediatorMap.unmapView(EditedDocumentWarningWindow);
+			this.mediatorMap.removeMediatorByView(this.contextView);
 		}
 	}
 }

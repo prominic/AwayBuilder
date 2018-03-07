@@ -28,7 +28,7 @@ package awaybuilder.desktop.controller
 			if (CONFIG::MOONSHINE)
 			{
 				var tmpSplashScreen:SplashScreenLib = SplashScreenLib.getInstance();
-				tmpSplashScreen.setAlpha(0);
+				tmpSplashScreen.close();
 				return;
 			}
 			

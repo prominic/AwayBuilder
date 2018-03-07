@@ -84,6 +84,8 @@
 		
 		import mx.events.FlexEvent;
 		
+		public static const DISPOSE:String = "DISPOSE";
+		
 		public var isMac:Boolean;
 		public var menu:Object;
 		public var eventDispatcher:*;
