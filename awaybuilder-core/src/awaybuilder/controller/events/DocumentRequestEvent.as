@@ -2,6 +2,8 @@ package awaybuilder.controller.events
 {
 	import flash.events.Event;
 	
+	import awaybuilder.controller.document.events.ImportTextureEvent;
+	
 	public class DocumentRequestEvent extends Event
 	{
 		public static const REQUEST_NEW_DOCUMENT:String = "requestNewDocument";
@@ -25,6 +27,7 @@ package awaybuilder.controller.events
 		}
 		
 		public var nextEvent:DocumentEvent;
+		public var nextEvent2Moonshine:ImportTextureEvent;
 		
 		override public function clone():Event
 		{

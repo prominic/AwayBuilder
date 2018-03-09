@@ -206,6 +206,16 @@ package awaybuilder.desktop.model
 			
 		}
 		
+		public function openByMoonshine(items:Array, event:Event):void
+		{
+			this.dispatch(new DocumentEvent(DocumentEvent.NEW_DOCUMENT));
+			
+			_nextEvent = event;
+			_name = items[1];
+			_path = items[0];
+			loadAssets( _path );
+		}
+		
 		private function file_save_selectHandler(event:Event):void
 		{
 			var file:File = File(event.currentTarget);

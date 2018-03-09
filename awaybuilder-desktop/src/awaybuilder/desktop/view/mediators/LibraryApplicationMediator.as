@@ -20,6 +20,7 @@ package awaybuilder.desktop.view.mediators
 	import mx.managers.IFocusManagerComponent;
 	
 	import awaybuilder.controller.clipboard.events.ClipboardEvent;
+	import awaybuilder.controller.document.events.ImportTextureEvent;
 	import awaybuilder.controller.events.DocumentEvent;
 	import awaybuilder.controller.events.DocumentModelEvent;
 	import awaybuilder.controller.events.DocumentRequestEvent;
@@ -34,6 +35,7 @@ package awaybuilder.desktop.view.mediators
 	import awaybuilder.model.vo.scene.AssetVO;
 	import awaybuilder.model.vo.scene.ObjectVO;
 	import awaybuilder.utils.enumerators.EMenuItem;
+	import awaybuilder.view.components.editors.events.PropertyEditorEvent;
 	import awaybuilder.view.mediators.BaseApplicationMediator;
 
 	public class LibraryApplicationMediator extends BaseApplicationMediator
@@ -79,6 +81,7 @@ package awaybuilder.desktop.view.mediators
             addContextListener( UndoRedoEvent.UNDO_LIST_CHANGE, context_undoListChangeHandler);
             addContextListener( ErrorLogEvent.LOG_ENTRY_MADE, eventDispatcher_errorLogHandler);
           
+			addViewListener( PropertyEditorEvent.REPLACE_AND_LOAD_TEXTURE_FROM_MOONSHINE, view_replaceTextureHandlerFromMoonshine );
 			addViewListener( Event.CLOSING, awaybuilder_closingHandler );
 			
 			addViewListener( DragEvent.DRAG_ENTER, awaybuilder_dragEnterHandler );
@@ -197,6 +200,15 @@ package awaybuilder.desktop.view.mediators
 			app.visible = true;
 		}
 		
+		private function view_replaceTextureHandlerFromMoonshine(event:PropertyEditorEvent):void
+		{
+			//awaybuilder_closingHandler(null);
+			var tmpDRevent:DocumentRequestEvent = new DocumentRequestEvent(DocumentRequestEvent.REQUEST_OPEN_DOCUMENT);
+			tmpDRevent.nextEvent2Moonshine = new ImportTextureEvent(ImportTextureEvent.IMPORT_AND_BITMAP_REPLACE_FROM_MOONSHINE, event.data as Array);
+			this.dispatch(tmpDRevent);
+			//this.dispatch(new ImportTextureEvent(ImportTextureEvent.IMPORT_AND_BITMAP_REPLACE_FROM_MOONSHINE, event.data as Array));
+		}
+		
 		private function context_itemSelectHandler(event:SceneEvent):void
 		{
 			if( event.items && event.items.length > 0)
@@ -292,7 +304,7 @@ package awaybuilder.desktop.view.mediators
 		{
 			if(this.documentModel.edited)
 			{
-				event.preventDefault();
+				if (event) event.preventDefault();
 				this.dispatch(new DocumentRequestEvent(DocumentRequestEvent.REQUEST_CLOSE_DOCUMENT));
 			}
 		}
@@ -353,6 +365,7 @@ package awaybuilder.desktop.view.mediators
 			removeViewListener( DragEvent.DRAG_ENTER, awaybuilder_dragEnterHandler );
 			removeViewListener( DragEvent.DRAG_DROP, awaybuilder_dragDropHandler );
 			removeViewListener( InvokeEvent.INVOKE, invokeHandler );
+			removeViewListener( PropertyEditorEvent.REPLACE_AND_LOAD_TEXTURE_FROM_MOONSHINE, view_replaceTextureHandlerFromMoonshine );
 			
 			this.eventMap.unmapListeners();
 		}

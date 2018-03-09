@@ -1,5 +1,12 @@
 package awaybuilder.view.mediators
 {
+    import flash.events.Event;
+    import flash.geom.Vector3D;
+    
+    import mx.collections.ArrayCollection;
+    import mx.controls.Alert;
+    import mx.events.CloseEvent;
+    
     import awaybuilder.controller.document.events.ImportTextureEvent;
     import awaybuilder.controller.events.DocumentModelEvent;
     import awaybuilder.controller.history.UndoRedoEvent;
@@ -35,15 +42,6 @@ package awaybuilder.view.mediators
     import awaybuilder.view.components.PropertiesPanel;
     import awaybuilder.view.components.editors.events.PropertyEditorEvent;
     
-    import flash.events.Event;
-    import flash.geom.Vector3D;
-    
-    import mx.charts.AreaChart;
-    import mx.collections.ArrayCollection;
-    import mx.controls.Alert;
-    import mx.events.CloseEvent;
-    
-    import org.robotlegs.base.ContextEvent;
     import org.robotlegs.mvcs.Mediator;
 
     public class PropertiesPanelMediator extends Mediator

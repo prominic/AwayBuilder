@@ -5,7 +5,7 @@ package awaybuilder.controller.document.events
 	public class ImportTextureEvent extends Event
 	{
 		public static const IMPORT_AND_BITMAP_REPLACE:String = "importBitmapAndRplace";
-		
+		public static const IMPORT_AND_BITMAP_REPLACE_FROM_MOONSHINE:String = "importBitmapAndRplaceFromMoonshine";
 		public static const IMPORT_AND_ADD:String = "importTextureForMaterial";
 		
 		public function ImportTextureEvent( type:String, items:Array, options:Object=null )

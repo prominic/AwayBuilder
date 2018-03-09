@@ -20,6 +20,9 @@
 		top="10" right="15" bottom="{10 + controlBar.height}" left="15"/>
 	
 	<s:SkinnableContainer id="controlBar" right="0" bottom="0" left="0">
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
 		<mx:Spacer width="100%"/>
 		<s:Button id="saveButton" label="Save" click="saveButton_clickHandler(event)"/>
 		<s:Button id="noSaveButton" label="Don't Save" click="noSaveButton_clickHandler(event)"/>

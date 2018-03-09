@@ -1,5 +1,7 @@
 package awaybuilder
 {
+	import flash.display.DisplayObjectContainer;
+	
 	import awaybuilder.controller.ReadDocumentDataFaultCommand;
 	import awaybuilder.controller.ShowTextureSizeErrorsCommand;
 	import awaybuilder.controller.StartupCommand;
@@ -97,8 +99,6 @@ package awaybuilder
 	import awaybuilder.view.mediators.LibraryPanelMediator;
 	import awaybuilder.view.mediators.PropertiesPanelMediator;
 	
-	import flash.display.DisplayObjectContainer;
-	
 	import org.robotlegs.base.ContextEvent;
 	import org.robotlegs.mvcs.Context;
 
@@ -148,6 +148,7 @@ package awaybuilder
 			this.commandMap.mapEvent(ImportTextureEvent.IMPORT_AND_ADD, ImportTextureForMaterialCommand);
 			
 			this.commandMap.mapEvent(ImportTextureEvent.IMPORT_AND_BITMAP_REPLACE, ImportBitmapCommand);
+			this.commandMap.mapEvent(ImportTextureEvent.IMPORT_AND_BITMAP_REPLACE_FROM_MOONSHINE, ImportBitmapCommand);
 			
 			commandMap.mapEvent(SceneEvent.CHANGE_GLOBAL_OPTIONS, ChangeGlobalOptionsCommand);
 			
@@ -216,6 +217,22 @@ package awaybuilder
 			this.mediatorMap.mapView(LibraryPanel, LibraryPanelMediator);
 			this.mediatorMap.mapView(EditToolBar, EditToolBarMediator);
 			this.mediatorMap.mapView(EditStatusBar, EditStatusBarMediator);
+		}
+		
+		override public function shutdown():void
+		{
+			super.shutdown();
+			
+			this.commandMap.unmapEvents();
+			this.injector.unmap(DocumentModel);
+			this.injector.unmap(AssetsModel);
+			this.injector.unmap(UndoRedoModel);
+			this.injector.unmap(ApplicationModel);
+			this.mediatorMap.unmapView(CoreEditor);
+			this.mediatorMap.unmapView(PropertiesPanel);
+			this.mediatorMap.unmapView(LibraryPanel);
+			this.mediatorMap.unmapView(EditToolBar);
+			this.mediatorMap.unmapView(EditStatusBar);
 		}
 	}
 }

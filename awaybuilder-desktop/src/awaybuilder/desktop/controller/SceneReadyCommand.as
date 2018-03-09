@@ -1,13 +1,8 @@
 package awaybuilder.desktop.controller
 {
 	import flash.events.Event;
-	import flash.system.Capabilities;
-	import flash.utils.setInterval;
-	import flash.utils.setTimeout;
 	
-	import mx.controls.Alert;
 	import mx.core.FlexGlobals;
-	import mx.events.ResizeEvent;
 	
 	import awaybuilder.controller.events.SceneReadyEvent;
 	
@@ -28,7 +23,8 @@ package awaybuilder.desktop.controller
 			if (CONFIG::MOONSHINE)
 			{
 				var tmpSplashScreen:SplashScreenLib = SplashScreenLib.getInstance();
-				tmpSplashScreen.close();
+				tmpSplashScreen.setAlpha(0);
+				this.contextView.dispatchEvent(new Event(event.type));
 				return;
 			}
 			

@@ -81,6 +81,7 @@
 		import awaybuilder.AwayBuilder;
 		import awaybuilder.utils.enumerators.EMenuItem;
 		import mx.core.IVisualElement;
+		import awaybuilder.view.components.editors.events.PropertyEditorEvent;
 		
 		import mx.events.FlexEvent;
 		
@@ -107,6 +108,11 @@
 				return [getCommandKey(),Keyboard.ALTERNATE];
 			}
 			return [];
+		}
+		
+		public function openFileByURL(url:String, name:String):void
+		{
+			this.dispatchEvent(new PropertyEditorEvent(PropertyEditorEvent.REPLACE_AND_LOAD_TEXTURE_FROM_MOONSHINE,[url, name]));
 		}
 		
 		public function getCommandKey():uint

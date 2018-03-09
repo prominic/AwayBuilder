@@ -40,18 +40,33 @@ package awaybuilder.desktop.controller
 				//deselect all so that the window doesn't interfere
 				this.dispatch(new SceneEvent(SceneEvent.SELECT_NONE));
 				
-				this.windowModel.savedNextEvent = this.event.nextEvent;
-				
 				var window:EditedDocumentWarningWindow = new EditedDocumentWarningWindow();
 				this.mediatorMap.createMediator(window);
 				
-				var app:AwayBuilderApplication = FlexGlobals.topLevelApplication as AwayBuilderApplication;
-				window.open();
-				window.nativeWindow.x = app.nativeWindow.x + (app.nativeWindow.width - window.nativeWindow.width) / 2;
-				window.nativeWindow.y = app.nativeWindow.y + (app.nativeWindow.height - window.nativeWindow.height) / 2;
+				if (CONFIG::MOONSHINE)
+				{
+					this.windowModel.savedNextEvent = this.event.nextEvent2Moonshine;
+					window.open();
+					window.nativeWindow.x = this.contextView.stage.nativeWindow.x + (this.contextView.stage.nativeWindow.width - window.nativeWindow.width) / 2;
+					window.nativeWindow.y = this.contextView.stage.nativeWindow.y + (this.contextView.stage.nativeWindow.height - window.nativeWindow.height) / 2;
+				}
+				else
+				{
+					this.windowModel.savedNextEvent = this.event.nextEvent;
+					var app:AwayBuilderApplication = FlexGlobals.topLevelApplication as AwayBuilderApplication;
+					window.open();
+					window.nativeWindow.x = app.nativeWindow.x + (app.nativeWindow.width - window.nativeWindow.width) / 2;
+					window.nativeWindow.y = app.nativeWindow.y + (app.nativeWindow.height - window.nativeWindow.height) / 2;
+				}
 				return;
 			}
 			
+			CONFIG::MOONSHINE
+				{
+					this.dispatch(this.event.nextEvent2Moonshine);
+					return;
+				}
+				
 			this.dispatch(this.event.nextEvent);
 		}
 	}

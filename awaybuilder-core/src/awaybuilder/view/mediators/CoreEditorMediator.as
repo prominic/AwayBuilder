@@ -1,5 +1,23 @@
 package awaybuilder.view.mediators
 {
+    import flash.display.BitmapData;
+    import flash.events.ErrorEvent;
+    import flash.events.Event;
+    import flash.events.KeyboardEvent;
+    import flash.events.UncaughtErrorEvent;
+    import flash.geom.ColorTransform;
+    import flash.geom.Matrix;
+    import flash.geom.Vector3D;
+    import flash.ui.Keyboard;
+    import flash.utils.setTimeout;
+    
+    import mx.collections.ArrayCollection;
+    import mx.controls.Alert;
+    import mx.core.FlexGlobals;
+    import mx.managers.FocusManager;
+    
+    import spark.collections.Sort;
+    
     import away3d.animators.AnimationSetBase;
     import away3d.animators.AnimatorBase;
     import away3d.animators.SkeletonAnimationSet;
@@ -138,25 +156,7 @@ package awaybuilder.view.mediators
     import awaybuilder.view.scene.events.Scene3DManagerEvent;
     import awaybuilder.view.scene.representations.ISceneRepresentation;
     
-    import flash.display.BitmapData;
-    import flash.events.ErrorEvent;
-    import flash.events.Event;
-    import flash.events.KeyboardEvent;
-    import flash.events.UncaughtErrorEvent;
-    import flash.geom.ColorTransform;
-    import flash.geom.Matrix;
-    import flash.geom.Vector3D;
-    import flash.ui.Keyboard;
-    import flash.utils.setTimeout;
-    
-    import mx.collections.ArrayCollection;
-    import mx.controls.Alert;
-    import mx.core.FlexGlobals;
-    import mx.managers.FocusManager;
-    
     import org.robotlegs.mvcs.Mediator;
-    
-    import spark.collections.Sort;
 
     public class CoreEditorMediator extends Mediator
 	{
@@ -178,6 +178,11 @@ package awaybuilder.view.mediators
 		
 		override public function onRegister():void
 		{
+			if (CONFIG::MOONSHINE)
+			{
+				this.contextView.addEventListener(AwayBuilderLibMain.DISPOSE, dispose);
+			}
+			
 			FlexGlobals.topLevelApplication.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, uncaughtErrorHandler);
 			
 			addContextListener(AnimationEvent.PLAY, contect_playHandler);
@@ -259,6 +264,85 @@ package awaybuilder.view.mediators
 		//	view handlers
 		//
 		//----------------------------------------------------------------------
+		
+		private function dispose(event:Event):void
+		{
+			this.contextView.removeEventListener(AwayBuilderLibMain.DISPOSE, dispose)
+			FlexGlobals.topLevelApplication.loaderInfo.uncaughtErrorEvents.removeEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, uncaughtErrorHandler);
+			
+			removeContextListener(AnimationEvent.PLAY, contect_playHandler);
+			removeContextListener(AnimationEvent.STOP, contect_stopHandler);
+			removeContextListener(AnimationEvent.SEEK, contect_seekHandler);
+			removeContextListener(AnimationEvent.PAUSE, contect_pauseHandler);
+			
+			removeContextListener(SceneEvent.TRANSLATE, eventDispatcher_translateHandler);
+			removeContextListener(SceneEvent.TRANSLATE_PIVOT, eventDispatcher_translateHandler);
+			removeContextListener(SceneEvent.SCALE, eventDispatcher_translateHandler);
+			removeContextListener(SceneEvent.ROTATE, eventDispatcher_translateHandler);
+			removeContextListener(SceneEvent.CHANGE_MESH, eventDispatcher_changeMeshHandler);
+			removeContextListener(SceneEvent.CHANGE_SUBMESH, eventDispatcher_changeMeshHandler);
+			removeContextListener(SceneEvent.CHANGE_LIGHT, eventDispatcher_changeLightHandler);
+			removeContextListener(SceneEvent.CHANGE_MATERIAL, eventDispatcher_changeMaterialHandler);
+			removeContextListener(SceneEvent.CHANGE_LIGHTPICKER, eventDispatcher_changeLightPickerHandler);
+			removeContextListener(SceneEvent.CHANGE_CONTAINER, eventDispatcher_changeContainerHandler);
+			removeContextListener(SceneEvent.CHANGE_SHADOW_METHOD, eventDispatcher_changeShadowMethodHandler);
+			removeContextListener(SceneEvent.CHANGE_SHADING_METHOD, eventDispatcher_changeShadingMethodHandler);
+			removeContextListener(SceneEvent.CHANGE_EFFECT_METHOD, eventDispatcher_changeEffectMethodHandler);
+			removeContextListener(SceneEvent.CHANGE_SHADOW_MAPPER, eventDispatcher_changeShadowMapperHandler);
+			removeContextListener(SceneEvent.CHANGE_CUBE_TEXTURE, eventDispatcher_changeCubeTextureHandler);
+			removeContextListener(SceneEvent.CHANGE_TEXTURE, eventDispatcher_changeTextureHandler);
+			removeContextListener(SceneEvent.CHANGE_GEOMETRY, eventDispatcher_changeGeometryHandler);
+			removeContextListener(SceneEvent.CHANGE_SKYBOX, eventDispatcher_changeSkyboxHandler);
+			removeContextListener(SceneEvent.CHANGE_ANIMATOR, eventDispatcher_changeAnimatorHandler);
+			removeContextListener(SceneEvent.CHANGE_TEXTURE_PROJECTOR, eventDispatcher_changeTextureProjectorHandler);
+			removeContextListener(SceneEvent.CHANGE_CAMERA, eventDispatcher_changeCameraHandler);
+			removeContextListener(SceneEvent.CHANGE_LENS, eventDispatcher_changeLensHandler);
+			removeContextListener(SceneEvent.CHANGE_SKELETON, eventDispatcher_changeSkeletonHandler);
+			removeContextListener(SceneEvent.CHANGE_ANIMATION_SET, eventDispatcher_changeAnimationSetHandler);
+			removeContextListener(SceneEvent.CHANGE_ANIMATION_NODE, eventDispatcher_changeAnimationNodeHandler);
+			
+			removeContextListener(SceneEvent.REPARENT_LIGHTS, eventDispatcher_reparentLightsHandler);
+			removeContextListener(SceneEvent.REPARENT_ANIMATIONS, eventDispatcher_reparentAnimationHandler);
+			removeContextListener(SceneEvent.REPARENT_MATERIAL_EFFECT, eventDispatcher_reparentMaterialEffectHandler);
+			
+			removeContextListener(SceneEvent.ADD_NEW_TEXTURE, eventDispatcher_addNewTextureHandler);
+			removeContextListener(SceneEvent.ADD_NEW_TEXTURE_PROJECTOR, eventDispatcher_addNewTextureHandler);
+			removeContextListener(SceneEvent.ADD_NEW_CUBE_TEXTURE, eventDispatcher_addNewCubeTextureHandler);
+			removeContextListener(SceneEvent.ADD_NEW_MESH, eventDispatcher_addNewMeshHandler);
+			removeContextListener(SceneEvent.ADD_NEW_CONTAINER, eventDispatcher_addNewContinerHandler);
+			removeContextListener(SceneEvent.ADD_NEW_MATERIAL, eventDispatcher_addNewMaterialToSubmeshHandler);
+			removeContextListener(SceneEvent.ADD_NEW_LIGHTPICKER, eventDispatcher_addNewLightpickerToMaterialHandler);
+			removeContextListener(SceneEvent.ADD_NEW_SHADOW_METHOD, eventDispatcher_addNewShadowMethodHandler);
+			removeContextListener(SceneEvent.ADD_NEW_EFFECT_METHOD, eventDispatcher_addNewEffectMethodHandler);
+			removeContextListener(SceneEvent.ADD_NEW_LIGHT, eventDispatcher_addNewLightHandler);
+			
+			removeContextListener(SceneEvent.CONTAINER_CLICKED, eventDispatcher_containerClicked);
+			
+			removeContextListener(DocumentModelEvent.OBJECTS_UPDATED, context_objectsUpdatedHandler);
+			removeContextListener(DocumentModelEvent.VALIDATE_OBJECT, context_validateObjectHandler);
+			
+			/*view.stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
+			view.stage.removeEventListener(KeyboardEvent.KEY_UP, keyUpHandler);*/
+			
+			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.READY, scene_readyHandler);
+			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.MESH_SELECTED, scene_meshSelectedHandler);
+			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.OBJECT_SELECTED_FROM_VIEW, scene_meshSelectedFromViewHandler);
+			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.TRANSFORM, scene_transformHandler);
+			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.TRANSFORM_RELEASE, scene_transformReleaseHandler);
+			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.ZOOM_DISTANCE_DELTA, eventDispatcher_zoomDistanceDeltaHandler);
+			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.ZOOM_TO_DISTANCE, eventDispatcher_zoomToDistanceHandler);
+			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.SWITCH_TRANSFORM_ROTATE, eventDispatcher_itemSwitchesToRotateMode);
+			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.SWITCH_TRANSFORM_TRANSLATE, eventDispatcher_itemSwitchesToTranslateMode);
+			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.SWITCH_CAMERA_TRANSFORMS, eventDispatcher_itemSwitchesToCameraTransformMode);
+			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.ENABLE_TRANSFORM_MODES, eventDispatcher_enableAllTransformModes);
+			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.UPDATE_BREADCRUMBS, eventDispatcher_updateBreadcrumbs);
+			Scene3DManager.clear(true);
+			
+			removeContextListener(SceneEvent.SELECT, eventDispatcher_itemsSelectHandler);
+			removeContextListener(SceneEvent.DELETE, eventDispatcher_itemsDeleteHandler);
+			removeContextListener(SceneEvent.FOCUS_SELECTION, eventDispatcher_itemsFocusHandler);
+			
+		}
 		
 		private function keyDownHandler(e:KeyboardEvent):void
 		{

@@ -78,6 +78,8 @@ package awaybuilder.desktop
 			this.commandMap.unmapEvents();
 			this.mediatorMap.unmapView(EditedDocumentWarningWindow);
 			this.mediatorMap.removeMediatorByView(this.contextView);
+			
+			shutdown();
 		}
 	}
 }
