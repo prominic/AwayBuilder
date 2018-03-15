@@ -17,8 +17,6 @@ package
 	
 	import mx.core.BitmapAsset;
 	
-	import spark.components.VGroup;
-	
 	import awaybuilder.AwayBuilder;
 	
 	public class SplashScreenLib extends NativeWindow
@@ -26,12 +24,16 @@ package
 		[Embed("/assets/Logo_AwayBuilder_240.png")]
 		private const Logo:Class;
 		
-		private static var instance:SplashScreenLib;
+		private static var _instance:SplashScreenLib;
 		
-		public static function getInstance():SplashScreenLib 
+		public static function get instance():SplashScreenLib 
 		{	
-			if (!instance) instance = new SplashScreenLib();
-			return instance;
+			_instance ||= new SplashScreenLib();
+			return _instance;
+		}
+		public static function set instance(value:SplashScreenLib):void
+		{
+			_instance = value;
 		}
 		
 		private var _image:Sprite;
@@ -71,9 +73,18 @@ package
 			var asset:BitmapAsset = new Logo();
 			_image.addChild( asset );
 			asset.x = Math.round( (this.width - asset.width)/2 );
-			asset.y = Math.round( (this.height - asset.height)/2 );
+			asset.y = Math.round( (this.height - asset.height)/2 ) - 10;
 			
 			var defaultTextFormat:TextFormat = new TextFormat("_sans", 10, 0xDDDDDD); 
+			
+			var moonshineText:TextField = new TextField();
+			moonshineText.defaultTextFormat = defaultTextFormat;
+			moonshineText.text = "(Moonshine Build)";
+			moonshineText.width = moonshineText.textWidth+8;
+			_image.addChild( moonshineText );
+			moonshineText.x = Math.round((this.width - moonshineText.width)/2);
+			moonshineText.y = asset.y + asset.height - 15;
+			
 			var text:TextField = new TextField();
 			text.defaultTextFormat = defaultTextFormat;
 			text.text = "©2013 The Away Foundation";

@@ -63,8 +63,11 @@ package awaybuilder.desktop.controller
 			
 			CONFIG::MOONSHINE
 				{
-					this.dispatch(this.event.nextEvent2Moonshine);
-					return;
+					if (this.event.nextEvent2Moonshine)
+					{
+						this.dispatch(this.event.nextEvent2Moonshine);
+						return;
+					}
 				}
 				
 			this.dispatch(this.event.nextEvent);

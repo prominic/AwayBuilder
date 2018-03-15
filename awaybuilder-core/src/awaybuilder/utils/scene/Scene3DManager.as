@@ -1,48 +1,83 @@
 package awaybuilder.utils.scene
 {
-	import avmplus.*;
+	import flash.display.BitmapData;
+	import flash.display.Stage;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	import flash.events.MouseEvent;
+	import flash.geom.Point;
+	import flash.geom.Vector3D;
 	
-	import away3d.cameras.*;
+	import mx.core.UIComponent;
+	
+	import avmplus.getQualifiedClassName;
+	
+	import away3d.cameras.Camera3D;
 	import away3d.cameras.lenses.LensBase;
-	import away3d.containers.*;
-	import away3d.core.managers.*;
-	import away3d.core.pick.*;
+	import away3d.containers.ObjectContainer3D;
+	import away3d.containers.Scene3D;
+	import away3d.containers.View3D;
+	import away3d.core.managers.Stage3DManager;
+	import away3d.core.managers.Stage3DProxy;
+	import away3d.core.pick.PickingColliderType;
+	import away3d.core.pick.PickingType;
 	import away3d.debug.AwayStats;
-	import away3d.entities.*;
-	import away3d.events.*;
-	import away3d.library.*;
-	import away3d.lights.*;
-	import away3d.primitives.*;
-	import away3d.textures.*;
-	import away3d.tools.utils.*;
+	import away3d.entities.Entity;
+	import away3d.entities.Mesh;
+	import away3d.entities.TextureProjector;
+	import away3d.events.MouseEvent3D;
+	import away3d.events.Stage3DEvent;
+	import away3d.library.AssetLibrary;
+	import away3d.lights.DirectionalLight;
+	import away3d.lights.LightBase;
+	import away3d.lights.PointLight;
+	import away3d.primitives.SkyBox;
+	import away3d.primitives.WireframePlane;
+	import away3d.primitives.WireframePrimitiveBase;
+	import away3d.textures.BitmapTexture;
+	import away3d.tools.utils.Bounds;
 	
-	import awaybuilder.utils.*;
-	import awaybuilder.utils.scene.modes.*;
-	import awaybuilder.view.scene.*;
-	import awaybuilder.view.scene.controls.*;
-	import awaybuilder.view.scene.events.*;
-	import awaybuilder.view.scene.representations.*;
-	import awaybuilder.view.scene.utils.*;
-	
-	import flash.display.*;
-	import flash.events.*;
-	import flash.geom.*;
-	
-	import mx.collections.*;
-	import mx.core.*;
+	import awaybuilder.utils.MathUtils;
+	import awaybuilder.utils.scene.modes.GizmoMode;
+	import awaybuilder.view.scene.OrientationTool;
+	import awaybuilder.view.scene.controls.CameraGizmo3D;
+	import awaybuilder.view.scene.controls.ContainerGizmo3D;
+	import awaybuilder.view.scene.controls.Gizmo3DBase;
+	import awaybuilder.view.scene.controls.LightGizmo3D;
+	import awaybuilder.view.scene.controls.RotateGizmo3D;
+	import awaybuilder.view.scene.controls.ScaleGizmo3D;
+	import awaybuilder.view.scene.controls.TextureProjectorGizmo3D;
+	import awaybuilder.view.scene.controls.TranslateGizmo3D;
+	import awaybuilder.view.scene.events.Gizmo3DEvent;
+	import awaybuilder.view.scene.events.Scene3DManagerEvent;
+	import awaybuilder.view.scene.representations.ISceneRepresentation;
+	import awaybuilder.view.scene.utils.ObjectContainerBounds;
 	
 	public class Scene3DManager extends EventDispatcher
 	{
-		// Singleton instance declaration
-		public static const instance : Scene3DManager = new Scene3DManager();
+		private static var _instance:Scene3DManager;
 		
-		public function Scene3DManager() { if ( instance ) throw new Error("Scene3DManager is a singleton"); }	
+		// Singleton instance declaration
+		public static function get instance():Scene3DManager
+		{
+			_instance ||= new Scene3DManager();
+			return _instance;
+		}
+		public static function set instance(value:Scene3DManager):void
+		{
+			_instance = value;
+		}
+		
+		public function Scene3DManager() { 
+			/*if ( instance ) throw new Error("Scene3DManager is a singleton");
+			else instance = new Scene3DManager();*/
+		}	
 		
 		private var sceneDoubleClickDetected : Boolean;
 		private var doubleClick3DMonitor : Boolean;
 		
 		public static var active:Boolean = true;
-
+		
 		public static var scope:UIComponent;
 		public static var stage:Stage;
 		public static var stage3DProxy:Stage3DProxy;

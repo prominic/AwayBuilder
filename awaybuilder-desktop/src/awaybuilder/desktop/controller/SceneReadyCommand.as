@@ -22,8 +22,9 @@ package awaybuilder.desktop.controller
 			// for in-Moonshine use
 			if (CONFIG::MOONSHINE)
 			{
-				var tmpSplashScreen:SplashScreenLib = SplashScreenLib.getInstance();
-				tmpSplashScreen.setAlpha(0);
+				var tmpSplashScreen:SplashScreenLib = SplashScreenLib.instance;
+				tmpSplashScreen.close();
+				SplashScreenLib.instance = null;
 				this.contextView.dispatchEvent(new Event(event.type));
 				return;
 			}

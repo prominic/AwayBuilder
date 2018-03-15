@@ -368,6 +368,12 @@ package awaybuilder.desktop.view.mediators
 			removeViewListener( PropertyEditorEvent.REPLACE_AND_LOAD_TEXTURE_FROM_MOONSHINE, view_replaceTextureHandlerFromMoonshine );
 			
 			this.eventMap.unmapListeners();
+			
+			app = null;
+			
+			documentModel = null;
+			
+			undoRedoModel = null;
 		}
 	}
 }

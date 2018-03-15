@@ -32,6 +32,7 @@ package awaybuilder.view.mediators
     import away3d.cameras.lenses.OrthographicOffCenterLens;
     import away3d.cameras.lenses.PerspectiveLens;
     import away3d.containers.ObjectContainer3D;
+    import away3d.containers.Scene3D;
     import away3d.core.base.Geometry;
     import away3d.core.base.ISubGeometry;
     import away3d.core.base.Object3D;
@@ -236,7 +237,6 @@ package awaybuilder.view.mediators
 			addContextListener(DocumentModelEvent.OBJECTS_UPDATED, context_objectsUpdatedHandler);
 			addContextListener(DocumentModelEvent.VALIDATE_OBJECT, context_validateObjectHandler);
 			
-			
 			Scene3DManager.instance.addEventListener(Scene3DManagerEvent.READY, scene_readyHandler);
 			Scene3DManager.instance.addEventListener(Scene3DManagerEvent.MESH_SELECTED, scene_meshSelectedHandler);
             Scene3DManager.instance.addEventListener(Scene3DManagerEvent.OBJECT_SELECTED_FROM_VIEW, scene_meshSelectedFromViewHandler);
@@ -336,11 +336,34 @@ package awaybuilder.view.mediators
 			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.SWITCH_CAMERA_TRANSFORMS, eventDispatcher_itemSwitchesToCameraTransformMode);
 			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.ENABLE_TRANSFORM_MODES, eventDispatcher_enableAllTransformModes);
 			Scene3DManager.instance.removeEventListener(Scene3DManagerEvent.UPDATE_BREADCRUMBS, eventDispatcher_updateBreadcrumbs);
-			Scene3DManager.clear(true);
+			Scene3DManager.clear();
+			Scene3DManager.stage3DProxy.clear();
+			Scene3DManager.stage3DProxy.clearDepthBuffer();
+			Scene3DManager.stage3DProxy.dispose();
+			Scene3DManager.backgroundView.dispose();
+			Scene3DManager.backgroundGrid.disposeWithChildren();
+			Scene3DManager.camera.disposeWithChildren();
+			Scene3DManager.currentGizmo.disposeWithChildren();
+			Scene3DManager.directionalLightView.dispose();
+			Scene3DManager.gizmoCamera.disposeWithChildren();
+			Scene3DManager.gizmoView.dispose();
+			Scene3DManager.grid.disposeWithChildren();
+			Scene3DManager.view.dispose();
+			CameraManager.kill();
+			Scene3DManager.instance = null;
 			
 			removeContextListener(SceneEvent.SELECT, eventDispatcher_itemsSelectHandler);
 			removeContextListener(SceneEvent.DELETE, eventDispatcher_itemsDeleteHandler);
 			removeContextListener(SceneEvent.FOCUS_SELECTION, eventDispatcher_itemsFocusHandler);
+			
+			view = null;
+			assets = null;
+			document = null;
+			
+			_scenegraphSelected = null;
+			
+			_currentAnimation = null;
+			_currentAnimator = null;
 			
 		}
 		
