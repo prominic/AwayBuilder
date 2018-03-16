@@ -3,8 +3,6 @@
                              xmlns:s="library://ns.adobe.com/flex/spark"
                              xmlns:components="awaybuilder.view.components.*"
                              xmlns:editors="awaybuilder.view.components.editors.*"
-                             styleName="propertiesPanel"
-                             chromeColor="0x1d1d1c" color="0xdbdbdb" fontSize="11"
                              skinClass="awaybuilder.view.skins.CollapsibleRightPanelSkin"
                              currentState="initAll" xmlns:controls="awaybuilder.view.components.controls.*">
 

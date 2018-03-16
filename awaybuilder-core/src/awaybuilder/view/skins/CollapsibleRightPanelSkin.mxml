@@ -23,7 +23,7 @@
 		 */
 		override protected function initializationComplete():void
 		{
-			useChromeColor = true;
+			//useChromeColor = true;
 			super.initializationComplete();
 		}
 		
@@ -73,6 +73,11 @@
 	
 	<!-- drop shadow can't be hittable so all other graphics go in this group -->
 	<s:Group left="0" right="0" top="0" bottom="0">
+		<s:Rect top="0" right="0" bottom="0" left="0">
+			<s:fill>
+				<s:SolidColor color="#333333"/>
+			</s:fill>
+		</s:Rect>
 		
 		<!-- layer 3: contents -->
 		<!--- Contains the horizontal stack of collapse bar, content and controlbar. -->
@@ -83,16 +88,8 @@
 			
 			<s:Group width="10" height="100%">
 				<s:Rect left="0" right="0" top="0" bottom="0">
-					<s:stroke>
-						<s:LinearGradientStroke rotation="90" weight="1">
-							<s:GradientEntry color="0xbbbbbb" />
-							<s:GradientEntry color="0xaaaaaa" />
-						</s:LinearGradientStroke>
-					</s:stroke>
-				</s:Rect>
-				<s:Rect top="1" right="1" bottom="1" left="1">
 					<s:fill>
-						<s:SolidColor color="#aaaaaa"/>
+						<s:SolidColor color="#000000"/>
 					</s:fill>
 				</s:Rect>
 				<s:ToggleButton id="collapseButton" styleName="objectPickerCollapseButton"

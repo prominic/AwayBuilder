@@ -61,6 +61,7 @@ package awaybuilder.view.components.editors.events
 		public static const REPLACE_TEXTURE:String = "replaceTexture";
 		public static const REPLACE_CUBE_TEXTURE:String = "replaceCubeTexture";
 		public static const REPLACE_AND_LOAD_TEXTURE_FROM_MOONSHINE:String = "replaceAndLoadTextureFromMoonshine";
+		public static const SAVE_FROM_MOONSHINE:String = "saveRequestFromMoonshine";
 
         public static const MESH_SUBMESH_CHANGE:String = "meshSubmeshChange";
 

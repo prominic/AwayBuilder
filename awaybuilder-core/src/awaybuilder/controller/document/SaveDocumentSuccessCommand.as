@@ -26,6 +26,11 @@ package awaybuilder.controller.document
 			this.documentModel.path = this.event.path;
 			this.documentModel.edited = false;
 			
+			CONFIG::MOONSHINE
+				{
+					this.contextView.dispatchEvent(this.event);
+				}
+			
 			if(this.windowModel.savedNextEvent)
 			{
 				var nextEvent:Event = this.windowModel.savedNextEvent;

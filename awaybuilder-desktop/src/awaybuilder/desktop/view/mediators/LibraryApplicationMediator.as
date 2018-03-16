@@ -25,6 +25,7 @@ package awaybuilder.desktop.view.mediators
 	import awaybuilder.controller.events.DocumentModelEvent;
 	import awaybuilder.controller.events.DocumentRequestEvent;
 	import awaybuilder.controller.events.ErrorLogEvent;
+	import awaybuilder.controller.events.SaveDocumentEvent;
 	import awaybuilder.controller.events.TextureSizeErrorsEvent;
 	import awaybuilder.controller.history.UndoRedoEvent;
 	import awaybuilder.controller.scene.events.SceneEvent;
@@ -81,14 +82,17 @@ package awaybuilder.desktop.view.mediators
             addContextListener( UndoRedoEvent.UNDO_LIST_CHANGE, context_undoListChangeHandler);
             addContextListener( ErrorLogEvent.LOG_ENTRY_MADE, eventDispatcher_errorLogHandler);
           
-			addViewListener( PropertyEditorEvent.REPLACE_AND_LOAD_TEXTURE_FROM_MOONSHINE, view_replaceTextureHandlerFromMoonshine );
 			addViewListener( Event.CLOSING, awaybuilder_closingHandler );
-			
 			addViewListener( DragEvent.DRAG_ENTER, awaybuilder_dragEnterHandler );
 			addViewListener( DragEvent.DRAG_DROP, awaybuilder_dragDropHandler );
-			
 			addViewListener( InvokeEvent.INVOKE, invokeHandler );
 			
+			CONFIG::MOONSHINE
+				{
+					addViewListener( PropertyEditorEvent.REPLACE_AND_LOAD_TEXTURE_FROM_MOONSHINE, view_replaceTextureHandlerFromMoonshine );
+					addViewListener( PropertyEditorEvent.SAVE_FROM_MOONSHINE, event_saveRequestFromMoonshine );
+				}
+
 			this.eventMap.mapListener(app.stage, KeyboardEvent.KEY_DOWN, stage_keyDownHandler);
 			//app.stage.addEventListener(FocusEvent.FOCUS_IN, focusInHandler );
 			
@@ -187,7 +191,8 @@ package awaybuilder.desktop.view.mediators
 		
 		private function eventDispatcher_documentEditedHandler(event:DocumentModelEvent):void
 		{
-			this.updatePageTitle();
+			//this.updatePageTitle();
+			app.dispatchEvent(new Event(Event.CHANGE));
 		}
 		
 		private function eventDispatcher_documentNameChangedHandler(event:DocumentModelEvent):void
@@ -202,11 +207,14 @@ package awaybuilder.desktop.view.mediators
 		
 		private function view_replaceTextureHandlerFromMoonshine(event:PropertyEditorEvent):void
 		{
-			//awaybuilder_closingHandler(null);
 			var tmpDRevent:DocumentRequestEvent = new DocumentRequestEvent(DocumentRequestEvent.REQUEST_OPEN_DOCUMENT);
 			tmpDRevent.nextEvent2Moonshine = new ImportTextureEvent(ImportTextureEvent.IMPORT_AND_BITMAP_REPLACE_FROM_MOONSHINE, event.data as Array);
 			this.dispatch(tmpDRevent);
-			//this.dispatch(new ImportTextureEvent(ImportTextureEvent.IMPORT_AND_BITMAP_REPLACE_FROM_MOONSHINE, event.data as Array));
+		}
+		
+		private function event_saveRequestFromMoonshine(event:PropertyEditorEvent):void
+		{
+			this.dispatch(new SaveDocumentEvent(SaveDocumentEvent.SAVE_DOCUMENT));
 		}
 		
 		private function context_itemSelectHandler(event:SceneEvent):void
@@ -366,6 +374,7 @@ package awaybuilder.desktop.view.mediators
 			removeViewListener( DragEvent.DRAG_DROP, awaybuilder_dragDropHandler );
 			removeViewListener( InvokeEvent.INVOKE, invokeHandler );
 			removeViewListener( PropertyEditorEvent.REPLACE_AND_LOAD_TEXTURE_FROM_MOONSHINE, view_replaceTextureHandlerFromMoonshine );
+			removeViewListener( PropertyEditorEvent.SAVE_FROM_MOONSHINE, event_saveRequestFromMoonshine )
 			
 			this.eventMap.unmapListeners();
 			
