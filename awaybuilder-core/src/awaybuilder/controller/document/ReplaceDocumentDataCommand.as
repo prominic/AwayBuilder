@@ -1,5 +1,15 @@
 package awaybuilder.controller.document
 {
+	import flash.display.DisplayObject;
+	import flash.display3D.textures.Texture;
+	import flash.events.Event;
+	
+	import mx.collections.ArrayCollection;
+	import mx.core.FlexGlobals;
+	import mx.managers.CursorManager;
+	
+	import spark.components.Application;
+	
 	import away3d.cameras.Camera3D;
 	import away3d.containers.ObjectContainer3D;
 	import away3d.entities.TextureProjector;
@@ -21,17 +31,7 @@ package awaybuilder.controller.document
 	import awaybuilder.utils.scene.CameraManager;
 	import awaybuilder.utils.scene.Scene3DManager;
 	
-	import flash.display.DisplayObject;
-	import flash.display3D.textures.Texture;
-	import flash.events.Event;
-	
-	import mx.collections.ArrayCollection;
-	import mx.core.FlexGlobals;
-	import mx.managers.CursorManager;
-	
 	import org.robotlegs.mvcs.Command;
-	
-	import spark.components.Application;
 
 	public class ReplaceDocumentDataCommand extends Command
 	{
@@ -67,6 +67,11 @@ package awaybuilder.controller.document
 			
 			this.dispatch(new DocumentModelEvent(DocumentModelEvent.OBJECTS_UPDATED));
 			this.dispatch(new DocumentModelEvent(DocumentModelEvent.OBJECTS_FILLED));
+			
+			CONFIG::MOONSHINE
+				{
+					AwayBuilderLibMain(this.contextView).isFileLoading = false;
+				}
 		}
 		
 		private function addLights( objects:Array ):void 

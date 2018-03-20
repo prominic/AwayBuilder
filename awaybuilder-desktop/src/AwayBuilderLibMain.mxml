@@ -89,6 +89,7 @@
 		public static const DISPOSE:String = "DISPOSE";
 		
 		public var isMac:Boolean;
+		public var isFileLoading:Boolean;
 		public var menu:Object;
 		public var eventDispatcher:*;
 		

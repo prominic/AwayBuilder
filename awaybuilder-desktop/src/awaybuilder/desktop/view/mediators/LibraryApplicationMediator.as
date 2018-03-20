@@ -207,6 +207,9 @@ package awaybuilder.desktop.view.mediators
 		
 		private function view_replaceTextureHandlerFromMoonshine(event:PropertyEditorEvent):void
 		{
+			if (app.isFileLoading) return;
+			else app.isFileLoading = true;
+			
 			var tmpDRevent:DocumentRequestEvent = new DocumentRequestEvent(DocumentRequestEvent.REQUEST_OPEN_DOCUMENT);
 			tmpDRevent.nextEvent2Moonshine = new ImportTextureEvent(ImportTextureEvent.IMPORT_AND_BITMAP_REPLACE_FROM_MOONSHINE, event.data as Array);
 			this.dispatch(tmpDRevent);
