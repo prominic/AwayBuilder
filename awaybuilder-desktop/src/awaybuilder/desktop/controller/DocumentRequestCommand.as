@@ -45,7 +45,7 @@ package awaybuilder.desktop.controller
 				
 				if (CONFIG::MOONSHINE)
 				{
-					this.windowModel.savedNextEvent = this.event.nextEvent2Moonshine;
+					this.windowModel.savedNextEvent = this.event.nextEvent2Moonshine || this.event.nextEvent;
 					window.open();
 					window.nativeWindow.x = this.contextView.stage.nativeWindow.x + (this.contextView.stage.nativeWindow.width - window.nativeWindow.width) / 2;
 					window.nativeWindow.y = this.contextView.stage.nativeWindow.y + (this.contextView.stage.nativeWindow.height - window.nativeWindow.height) / 2;

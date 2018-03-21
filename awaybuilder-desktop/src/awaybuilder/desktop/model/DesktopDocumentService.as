@@ -117,7 +117,7 @@ package awaybuilder.desktop.model
 			}
 			var file:File=File.documentsDirectory.resolvePath("./" + defaultName);
 			if(document.path)
-				file = File.documentsDirectory.resolvePath(document.path).resolvePath("./" + defaultName);;
+				file = new File(document.path).parent.resolvePath(defaultName);
 			file.addEventListener(Event.SELECT, file_save_selectHandler);
 			file.addEventListener(Event.CANCEL, file_save_cancelHandler);
 			file.browseForSave("Save Document As");
