@@ -1,10 +1,10 @@
 package awaybuilder.view.mediators
 {
-	import awaybuilder.view.components.events.StatusBarEvent;
 	import awaybuilder.controller.scene.events.SceneEvent;
 	import awaybuilder.model.DocumentModel;
 	import awaybuilder.utils.scene.CameraManager;
 	import awaybuilder.view.components.EditStatusBar;
+	import awaybuilder.view.components.events.StatusBarEvent;
 	import awaybuilder.view.components.events.ToolBarZoomEvent;
 	import awaybuilder.view.scene.events.Scene3DManagerEvent;
 	

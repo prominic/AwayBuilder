@@ -181,12 +181,13 @@ package awaybuilder.desktop.view.mediators
 
 		private function updatePageTitle():void
 		{
-			var newTitle:String = "Away Builder - " + this.documentModel.name;
+			/*var newTitle:String = "Away Builder - " + this.documentModel.name;
 			if(this.documentModel.edited)
 			{
 				newTitle += " *";
-			}
-			//app.title = newTitle;
+			}*/
+			
+			app.coreEditor.appStatusBar.documentName = this.documentModel.name;
 		}
 		
 		private function eventDispatcher_documentEditedHandler(event:DocumentModelEvent):void

@@ -38,5 +38,5 @@
 		
 	</s:Group>
 		
-	<components:EditStatusBar id="appStatusBar" width="100%"/>
+	<components:EditStatusBar id="appStatusBar" width="100%" />
 </s:SkinnableContainer>

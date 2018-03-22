@@ -10,15 +10,13 @@
 		[Event(name="zoom",type="awaybuilder.view.components.events.StatusBarEvent")]
 	</fx:Metadata>
 
-	<s:Label text="Current container"/>
+	<!--<s:Label text="Current container"/>-->
 	
 	<s:ButtonBar id="breadCrumbBar" change="breadCrumbClicked(event);">
 		<s:dataProvider>
 			<s:ArrayCollection source="['Scene']" />
 		</s:dataProvider>
 	</s:ButtonBar>
-	
-	<s:Spacer width="100%"/>
 	
 	<s:Button id="zoomOutButton" styleName="toolbarButton" toolTip="Zoom Out" autoRepeat="true"
 			  buttonDown="zoomOutButton_clickHandler(event)"/>
@@ -29,16 +27,22 @@
 	<s:Button id="zoomInButton" styleName="toolbarButton" toolTip="Zoom In" autoRepeat="true"
 		buttonDown="zoomInButton_clickHandler(event)"/>
 	
+	<s:Spacer width="100%"/>
+	
+	<s:Label color="0x999999" text="{documentName}"/>
+	
 	<fx:Script>
 	<![CDATA[
-		import awaybuilder.view.components.events.StatusBarEvent;
-		import awaybuilder.utils.scene.CameraManager;
-		import awaybuilder.view.components.events.ToolBarZoomEvent;
-		
 		import mx.events.FlexEvent;
 		
 		import spark.events.IndexChangeEvent;
-                        
+		
+		import awaybuilder.utils.scene.CameraManager;
+		import awaybuilder.view.components.events.StatusBarEvent;
+		import awaybuilder.view.components.events.ToolBarZoomEvent;
+        
+		[Bindable] public var documentName:String;
+		
 		private var breadCrumbButtons:Array = [ {label:"Scene", container:null} ];
 
 		protected function resetButtons():void {
@@ -100,7 +104,7 @@
 		{
 			this.dispatchEvent(new ToolBarZoomEvent(ToolBarZoomEvent.ZOOM_TO, this.zoom));
 		}
-
+		
 	]]>
 	</fx:Script>
 </s:SkinnableContainer>

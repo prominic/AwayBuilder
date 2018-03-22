@@ -4,11 +4,11 @@ package awaybuilder.desktop.view.mediators
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
+	import awaybuilder.controller.events.SaveDocumentEvent;
 	import awaybuilder.desktop.utils.ModalityManager;
 	import awaybuilder.desktop.view.components.EditedDocumentWarningWindow;
-	import awaybuilder.controller.events.SaveDocumentEvent;
-	import awaybuilder.model.DocumentModel;
 	import awaybuilder.model.ApplicationModel;
+	import awaybuilder.model.DocumentModel;
 	
 	import org.robotlegs.mvcs.Mediator;
 	
@@ -95,6 +95,11 @@ package awaybuilder.desktop.view.mediators
 		
 		private function window_cancelHandler(event:Event):void
 		{
+			CONFIG::MOONSHINE
+				{
+					AwayBuilderLibMain(this.contextView).isFileLoading = false;
+				}
+			
 			this.window.close();
 		}
 	}
