@@ -81,6 +81,9 @@
 	
 	<mx:Spacer width="100%"/>
 	
+	<s:Label color="0x999999" text="{documentName}" width="200" textAlign="right"
+			 maxDisplayedLines="1" showTruncationTip="true"/>
+	
 	<s:Button id="statsButton" styleName="toolbarButton" toolTip="Stats" click="statsButton_clickHandler(event)" alpha="0.9"/>
 	
 	<s:Button id="documentSettingsButton" styleName="toolbarButton" toolTip="Document Settings" click="documentSettingsButton_clickHandler(event)"/>
@@ -89,6 +92,8 @@
 	<![CDATA[
 		import awaybuilder.view.components.events.ToolBarEvent;
 		import awaybuilder.view.components.popup.StatsPopup;
+		
+		[Bindable] public var documentName:String;
 		
 		private var _showBugReportButton:Boolean = false;
 		

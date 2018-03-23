@@ -187,7 +187,7 @@ package awaybuilder.desktop.view.mediators
 				newTitle += " *";
 			}*/
 			
-			app.coreEditor.appStatusBar.documentName = this.documentModel.name;
+			app.coreEditor.editToolbar.documentName = this.documentModel.name;
 		}
 		
 		private function eventDispatcher_documentEditedHandler(event:DocumentModelEvent):void
