@@ -330,6 +330,7 @@ package awaybuilder.view.scene.controls
 			
 			currentAxis = "";
 			active = false;
+			
 			CameraManager.active = true;
 			
 			xTorus.material = xAxisMaterial;		

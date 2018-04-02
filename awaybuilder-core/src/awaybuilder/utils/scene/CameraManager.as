@@ -1,13 +1,5 @@
 package awaybuilder.utils.scene
 {
-	import away3d.cameras.Camera3D;
-	import away3d.containers.ObjectContainer3D;
-	import away3d.containers.View3D;
-	import away3d.core.math.Quaternion;
-	
-	import awaybuilder.utils.MathUtils;
-	import awaybuilder.utils.scene.modes.CameraMode;
-	
 	import com.greensock.TweenMax;
 	
 	import flash.display.Stage;
@@ -18,6 +10,14 @@ package awaybuilder.utils.scene
 	import flash.system.Capabilities;
 	
 	import mx.core.UIComponent;
+	
+	import away3d.cameras.Camera3D;
+	import away3d.containers.ObjectContainer3D;
+	import away3d.containers.View3D;
+	import away3d.core.math.Quaternion;
+	
+	import awaybuilder.utils.MathUtils;
+	import awaybuilder.utils.scene.modes.CameraMode;
 
 	/**
 	 * ...
@@ -70,7 +70,7 @@ package awaybuilder.utils.scene
 		private var _runMultiplier:Number = 3;
 		private var _pause:Boolean = false;
 		private var ispanning:Boolean = false;
-		private var _mouseOutDetected:Boolean = false;
+		private var _mouseOutDetected:Boolean = true;
 		
 		private var poi:ObjectContainer3D;
 		
@@ -139,7 +139,7 @@ package awaybuilder.utils.scene
 		}			
 		
 		public static function get active():Boolean { return _active; }		
-		public static function set active(value:Boolean):void { 
+		public static function set active(value:Boolean):void {
 			_active = value;
 			
 			if (!_active) {

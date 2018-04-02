@@ -79,7 +79,7 @@ package
 			
 			var moonshineText:TextField = new TextField();
 			moonshineText.defaultTextFormat = defaultTextFormat;
-			moonshineText.text = "(Moonshine Build)";
+			moonshineText.text = "(A Moonshine Build)";
 			moonshineText.width = moonshineText.textWidth+8;
 			_image.addChild( moonshineText );
 			moonshineText.x = Math.round((this.width - moonshineText.width)/2);
