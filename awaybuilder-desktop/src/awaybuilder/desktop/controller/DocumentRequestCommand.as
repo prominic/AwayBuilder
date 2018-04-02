@@ -1,16 +1,16 @@
 package awaybuilder.desktop.controller
 {
+	import mx.core.FlexGlobals;
+	
+	import spark.components.Application;
+	
 	import awaybuilder.controller.events.DocumentRequestEvent;
 	import awaybuilder.controller.scene.events.SceneEvent;
 	import awaybuilder.desktop.view.components.EditedDocumentWarningWindow;
 	import awaybuilder.model.ApplicationModel;
 	import awaybuilder.model.DocumentModel;
 	
-	import mx.core.FlexGlobals;
-	
 	import org.robotlegs.mvcs.Command;
-	
-	import spark.components.Application;
 	
 	public class DocumentRequestCommand extends Command
 	{
@@ -65,6 +65,13 @@ package awaybuilder.desktop.controller
 				{
 					if (this.event.nextEvent2Moonshine)
 					{
+						// this will not force the editor to reload same file if nothing has changed
+						if (this.documentModel.path == this.event.nextEvent2Moonshine.items[0]) 
+						{
+							AwayBuilderLibMain(contextView).isFileLoading = false;
+							return;
+						}
+						
 						this.dispatch(this.event.nextEvent2Moonshine);
 						return;
 					}
