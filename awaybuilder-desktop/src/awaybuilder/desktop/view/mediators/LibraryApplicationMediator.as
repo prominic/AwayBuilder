@@ -91,6 +91,7 @@ package awaybuilder.desktop.view.mediators
 				{
 					addViewListener( PropertyEditorEvent.REPLACE_AND_LOAD_TEXTURE_FROM_MOONSHINE, view_replaceTextureHandlerFromMoonshine );
 					addViewListener( PropertyEditorEvent.SAVE_FROM_MOONSHINE, event_saveRequestFromMoonshine );
+					addViewListener( PropertyEditorEvent.NEW_FROM_MOONSHINE, event_newDocumentRequestFromMoonshine );
 				}
 
 			this.eventMap.mapListener(app.stage, KeyboardEvent.KEY_DOWN, stage_keyDownHandler);
@@ -219,6 +220,11 @@ package awaybuilder.desktop.view.mediators
 		private function event_saveRequestFromMoonshine(event:PropertyEditorEvent):void
 		{
 			this.dispatch(new SaveDocumentEvent(SaveDocumentEvent.SAVE_DOCUMENT));
+		}
+		
+		private function event_newDocumentRequestFromMoonshine(event:PropertyEditorEvent):void
+		{
+			this.dispatch(new DocumentEvent(DocumentEvent.NEW_DOCUMENT));
 		}
 		
 		private function context_itemSelectHandler(event:SceneEvent):void
